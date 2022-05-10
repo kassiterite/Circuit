@@ -1,19 +1,18 @@
-
 using UnityEngine;
 
 public class MapFiller
 {
     private VoxelTile[,] _placedTiles;
-    private TileSelector _tileSelector;
-    private TilePlacer _tilePlacer;
-    public MapFiller(VoxelTile[,] placedTiles, PrefabGenerator prefabHolder, Transform transform)
+    private readonly TileSelector _tileSelector;
+    private readonly TilePlacer _tilePlacer;
+    public MapFiller(ref VoxelTile[,] placedTiles, PrefabGenerator prefabHolder, TilePlacer tilePlacer)
     {
         _placedTiles = placedTiles;
         _tileSelector = new TileSelector(prefabHolder);
-        _tilePlacer = new TilePlacer(transform);
+        _tilePlacer = tilePlacer;
     }
 
-    public VoxelTile[,] FillMap()
+    public void FillMap()
     {
         for (int y = 0; y < _placedTiles.GetLength(1); y++)
         {
@@ -27,6 +26,5 @@ public class MapFiller
                 }
             }
         }
-        return _placedTiles;
     }
 }

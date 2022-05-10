@@ -5,11 +5,11 @@ using UnityEngine;
 public class PrefabGenerator : MonoBehaviour
 {
     public List<VoxelTile> prefabs = new List<VoxelTile>();
-    private Transform parent;
+    private Transform _parent;
 
     private void Awake()
     {
-        parent = transform;
+        _parent = transform;
         int countBeforeAdding = prefabs.Count;
         for (int i = 0; i < countBeforeAdding; i++)
         {
@@ -41,7 +41,7 @@ public class PrefabGenerator : MonoBehaviour
             prefab.transform.position + Vector3.forward * rotateIterationCount, 
             Quaternion.Euler(0, 90 * rotateIterationCount, 0));
         GameObject cloneGameObject = clone.gameObject;
-        cloneGameObject.transform.parent = parent;
+        cloneGameObject.transform.parent = _parent;
         cloneGameObject.name = $"{prefab.name}_{rotateIterationCount * 90}";
         prefabs.Add(clone);
     }

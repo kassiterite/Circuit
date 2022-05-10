@@ -9,7 +9,6 @@ public class MapObject : MonoBehaviour
     [SerializeField] private TileProperties tileProperties;
 
     private VoxelTile[,] _placedTiles;
-    public VoxelTile[,] PlacedTiles => _placedTiles;
 
     [Serializable]
     public struct MapProperties
@@ -51,8 +50,17 @@ public class MapObject : MonoBehaviour
     void Start()
     {
         _placedTiles = new VoxelTile[mapProperties.MapSize.x, mapProperties.MapSize.y];
-        MapFiller mapFiller = new MapFiller(_placedTiles, mapProperties.PrefabHolder, transform);
-        _placedTiles = mapFiller.FillMap();
+        TilePlacer tilePlacer = new TilePlacer(transform);
+        WayBuilder wayBuilder = 
+            new WayBuilder(wayProperties, tileProperties, mapProperties.PrefabHolder, tilePlacer, ref _placedTiles);
+        wayBuilder.BuildWay();
+        MapFiller mapFiller = 
+            new MapFiller(ref _placedTiles, mapProperties.PrefabHolder, tilePlacer);
+        mapFiller.FillMap();
+        EventManager.SendGateStateChange();
+        AtlasSwitcher atlasSwitcher = new AtlasSwitcher(tileProperties, wayProperties, ref _placedTiles);
+        atlasSwitcher.SwitchAtlas();
+        EventManager.onGateStateChange += atlasSwitcher.SwitchAtlas;
     }
 
     private void OnValidate()
